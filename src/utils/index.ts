@@ -1,6 +1,6 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core/dist'
 import { Pair } from '@uniswap/v2-sdk'
-import { Pool } from '@uniswap/v3-sdk/src'
+import { Pool } from '@uniswap/v3-sdk/dist'
 import { MixedRouteSDK } from '../entities/mixedRoute/route'
 
 /**

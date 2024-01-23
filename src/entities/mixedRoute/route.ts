@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant'
 
-import { Currency, Price, Token } from '@uniswap/sdk-core'
-import { Pool } from '@uniswap/v3-sdk/src'
+import { Currency, Price, Token } from '@uniswap/sdk-core/dist'
+import { Pool } from '@uniswap/v3-sdk/dist'
 import { Pair } from '@uniswap/v2-sdk'
 
 type TPool = Pair | Pool
@@ -69,10 +69,12 @@ export class MixedRouteSDK<TInput extends Currency, TOutput extends Currency> {
         return nextInput.equals(pool.token0)
           ? {
               nextInput: pool.token1,
+              // @ts-ignore
               price: price.multiply(pool.token0Price),
             }
           : {
               nextInput: pool.token0,
+              // @ts-ignore
               price: price.multiply(pool.token1Price),
             }
       },

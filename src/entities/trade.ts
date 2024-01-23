@@ -1,6 +1,6 @@
-import { Currency, CurrencyAmount, Fraction, Percent, Price, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent, Price, TradeType } from '@uniswap/sdk-core/dist'
 import { Pair, Route as V2RouteSDK, Trade as V2TradeSDK } from '@uniswap/v2-sdk'
-import { Pool, Route as V3RouteSDK, Trade as V3TradeSDK } from '@uniswap/v3-sdk/src'
+import { Pool, Route as V3RouteSDK, Trade as V3TradeSDK } from '@uniswap/v3-sdk/dist'
 import invariant from 'tiny-invariant'
 import { ONE, ONE_HUNDRED_PERCENT, ZERO, ZERO_PERCENT } from '../constants'
 import { MixedRouteSDK } from './mixedRoute/route'
@@ -52,8 +52,10 @@ export class Trade<TInput extends Currency, TOutput extends Currency, TTradeType
     // wrap v2 routes
     for (const { routev2, inputAmount, outputAmount } of v2Routes) {
       const route = new RouteV2(routev2)
+      // @ts-ignore
       this.routes.push(route)
       this.swaps.push({
+        // @ts-ignore
         route,
         inputAmount,
         outputAmount,
@@ -301,6 +303,7 @@ export class Trade<TInput extends Currency, TOutput extends Currency, TTradeType
     }[] = []
 
     for (const { routev2, amount } of v2Routes) {
+      // @ts-ignore
       const v2Trade = new V2TradeSDK(routev2, amount, tradeType)
       const { inputAmount, outputAmount } = v2Trade
 
@@ -367,6 +370,7 @@ export class Trade<TInput extends Currency, TOutput extends Currency, TTradeType
     }[] = []
 
     if (route instanceof V2RouteSDK) {
+      // @ts-ignore
       const v2Trade = new V2TradeSDK(route, amount, tradeType)
       const { inputAmount, outputAmount } = v2Trade
       v2Routes = [{ routev2: route, inputAmount, outputAmount }]

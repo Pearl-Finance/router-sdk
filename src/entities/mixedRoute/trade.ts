@@ -1,6 +1,15 @@
-import { Currency, Fraction, Percent, Price, sortedInsert, CurrencyAmount, TradeType, Token } from '@uniswap/sdk-core'
+import {
+  Currency,
+  Fraction,
+  Percent,
+  Price,
+  sortedInsert,
+  CurrencyAmount,
+  TradeType,
+  Token,
+} from '@uniswap/sdk-core/dist'
 import { Pair } from '@uniswap/v2-sdk'
-import { BestTradeOptions, Pool } from '@uniswap/v3-sdk/src'
+import { BestTradeOptions, Pool } from '@uniswap/v3-sdk/dist'
 import invariant from 'tiny-invariant'
 import { ONE, ZERO } from '../../constants'
 import { MixedRouteSDK } from './route'

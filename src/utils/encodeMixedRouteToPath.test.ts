@@ -1,6 +1,6 @@
-import { CurrencyAmount, Ether, Token, WETH9 } from '@uniswap/sdk-core'
+import { CurrencyAmount, Ether, Token, WETH9 } from '@uniswap/sdk-core/dist'
 import { Pair } from '@uniswap/v2-sdk'
-import { encodeSqrtRatioX96, FeeAmount, Pool } from '@uniswap/v3-sdk/src'
+import { encodeSqrtRatioX96, FeeAmount, Pool } from '@uniswap/v3-sdk/dist'
 import { MixedRouteSDK } from '../entities/mixedRoute/route'
 import { encodeMixedRouteToPath } from './encodeMixedRouteToPath'
 

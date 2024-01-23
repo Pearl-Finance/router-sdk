@@ -1,5 +1,5 @@
 import { Interface } from '@ethersproject/abi'
-import { Currency, CurrencyAmount, Percent, TradeType, validateAndParseAddress, WETH9 } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType, validateAndParseAddress, WETH9 } from '@uniswap/sdk-core/dist'
 import { abi } from '@uniswap/swap-router-contracts/artifacts/contracts/interfaces/ISwapRouter02.sol/ISwapRouter02.json'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import {
@@ -13,7 +13,7 @@ import {
   SelfPermit,
   toHex,
   Trade as V3Trade,
-} from '@uniswap/v3-sdk/src'
+} from '@uniswap/v3-sdk/dist'
 import invariant from 'tiny-invariant'
 import JSBI from 'jsbi'
 import { ADDRESS_THIS, MSG_SENDER } from './constants'
@@ -360,6 +360,7 @@ export abstract class SwapRouter {
         if (route.protocol == Protocol.V2) {
           individualTrades.push(
             new V2Trade(
+              // @ts-ignore
               route as RouteV2<Currency, Currency>,
               trades.tradeType == TradeType.EXACT_INPUT ? inputAmount : outputAmount,
               trades.tradeType
