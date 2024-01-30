@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi';
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core/dist';
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core';
 import { Trade as V2Trade } from '@uniswap/v2-sdk';
-import { FeeOptions, MethodParameters, PermitOptions, Position, Trade as V3Trade } from '@uniswap/v3-sdk/dist';
+import { FeeOptions, MethodParameters, PermitOptions, Position, Trade as V3Trade } from '@uniswap/v3-sdk';
 import { ApprovalTypes, CondensedAddLiquidityOptions } from './approveAndCall';
 import { Trade } from './entities/trade';
 import { Validation } from './multicallExtended';

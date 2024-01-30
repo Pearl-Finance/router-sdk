@@ -1695,7 +1695,7 @@
 
 "@uniswap/sdk-core@^4", "@uniswap/sdk-core@^4.0.7", "@uniswap/sdk-core@github:Pearl-Finance/sdk-core":
   version "4.0.10"
-  resolved "https://codeload.github.com/Pearl-Finance/sdk-core/tar.gz/9ce3311ca2cf8fa8970351f37696cc14ac13b605"
+  resolved "https://codeload.github.com/Pearl-Finance/sdk-core/tar.gz/6decd31db91c173d2652133f5b00bc685edbada1"
   dependencies:
     "@ethersproject/address" "^5.0.2"
     big.js "^5.2.2"
@@ -1723,7 +1723,7 @@
 
 "@uniswap/v2-sdk@github:Pearl-Finance/v2-sdk":
   version "4.0.0"
-  resolved "https://codeload.github.com/Pearl-Finance/v2-sdk/tar.gz/524c3cf9b226371773cfc1c67ab91ac8b9f04d32"
+  resolved "https://codeload.github.com/Pearl-Finance/v2-sdk/tar.gz/bfb1e004ced9ee2a184642389b0ff89e4c20499d"
   dependencies:
     "@ethersproject/address" "^5.0.0"
     "@ethersproject/solidity" "^5.0.0"
@@ -1754,7 +1754,7 @@
 
 "@uniswap/v3-sdk@github:Pearl-Finance/v3-sdk":
   version "3.10.0"
-  resolved "https://codeload.github.com/Pearl-Finance/v3-sdk/tar.gz/1caf1107ce5be90b19a6de24c57bbdbca0355730"
+  resolved "https://codeload.github.com/Pearl-Finance/v3-sdk/tar.gz/02b5ab5c0e2c25526587e746723f9a30925fb742"
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"

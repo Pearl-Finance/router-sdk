@@ -1,13 +1,15 @@
-import { Percent, validateAndParseAddress, Price, Fraction, CurrencyAmount, TradeType, sortedInsert, WETH9 } from '@uniswap/sdk-core/dist';
+import { Percent, validateAndParseAddress, Price, Fraction, CurrencyAmount, TradeType, sortedInsert } from '@uniswap/sdk-core/dist';
 import JSBI from 'jsbi';
 import { Interface } from '@ethersproject/abi';
 import invariant from 'tiny-invariant';
 import { abi } from '@uniswap/swap-router-contracts/artifacts/contracts/interfaces/IApproveAndCall.sol/IApproveAndCall.json';
-import { NonfungiblePositionManager, toHex, Multicall, Payments, Pool, Route as Route$1, Trade as Trade$1, encodeRouteToPath, SelfPermit, Position } from '@uniswap/v3-sdk/dist';
+import { NonfungiblePositionManager, toHex, Multicall, Payments, Pool, Route as Route$1, Trade as Trade$1 } from '@uniswap/v3-sdk/dist';
 import { abi as abi$1 } from '@uniswap/swap-router-contracts/artifacts/contracts/interfaces/IMulticallExtended.sol/IMulticallExtended.json';
 import { abi as abi$2 } from '@uniswap/swap-router-contracts/artifacts/contracts/interfaces/IPeripheryPaymentsWithFeeExtended.sol/IPeripheryPaymentsWithFeeExtended.json';
+import { validateAndParseAddress as validateAndParseAddress$1, TradeType as TradeType$1, CurrencyAmount as CurrencyAmount$1, Percent as Percent$1, WETH9 } from '@uniswap/sdk-core';
 import { abi as abi$3 } from '@uniswap/swap-router-contracts/artifacts/contracts/interfaces/ISwapRouter02.sol/ISwapRouter02.json';
 import { Pair, Route, Trade as Trade$2 } from '@uniswap/v2-sdk';
+import { toHex as toHex$1, encodeRouteToPath, Trade as Trade$3, SelfPermit, Payments as Payments$1, Position, Pool as Pool$1 } from '@uniswap/v3-sdk';
 import { pack } from '@ethersproject/solidity';
 
 var MSG_SENDER = '0x0000000000000000000000000000000000000001';
@@ -1717,7 +1719,7 @@ var getOutputOfPools = function getOutputOfPools(pools, firstInputToken) {
 };
 
 var ZERO$1 = /*#__PURE__*/JSBI.BigInt(0);
-var REFUND_ETH_PRICE_IMPACT_THRESHOLD = /*#__PURE__*/new Percent( /*#__PURE__*/JSBI.BigInt(50), /*#__PURE__*/JSBI.BigInt(100));
+var REFUND_ETH_PRICE_IMPACT_THRESHOLD = /*#__PURE__*/new Percent$1( /*#__PURE__*/JSBI.BigInt(50), /*#__PURE__*/JSBI.BigInt(100));
 /**
  * Represents the Uniswap V2 + V3 SwapRouter02, and has static methods for helping execute trades.
  */
@@ -1735,13 +1737,13 @@ var SwapRouter = /*#__PURE__*/function () {
    * @returns A string array of calldatas for the trade.
    */
   SwapRouter.encodeV2Swap = function encodeV2Swap(trade, options, routerMustCustody, performAggregatedSlippageCheck) {
-    var amountIn = toHex(trade.maximumAmountIn(options.slippageTolerance).quotient);
-    var amountOut = toHex(trade.minimumAmountOut(options.slippageTolerance).quotient);
+    var amountIn = toHex$1(trade.maximumAmountIn(options.slippageTolerance).quotient);
+    var amountOut = toHex$1(trade.minimumAmountOut(options.slippageTolerance).quotient);
     var path = trade.route.path.map(function (token) {
       return token.address;
     });
-    var recipient = routerMustCustody ? ADDRESS_THIS : typeof options.recipient === 'undefined' ? MSG_SENDER : validateAndParseAddress(options.recipient);
-    if (trade.tradeType === TradeType.EXACT_INPUT) {
+    var recipient = routerMustCustody ? ADDRESS_THIS : typeof options.recipient === 'undefined' ? MSG_SENDER : validateAndParseAddress$1(options.recipient);
+    if (trade.tradeType === TradeType$1.EXACT_INPUT) {
       var exactInputParams = [amountIn, performAggregatedSlippageCheck ? 0 : amountOut, path, recipient];
       return SwapRouter.INTERFACE.encodeFunctionData('swapExactTokensForTokens', exactInputParams);
     } else {
@@ -1764,13 +1766,13 @@ var SwapRouter = /*#__PURE__*/function () {
         route = _step$value.route,
         inputAmount = _step$value.inputAmount,
         outputAmount = _step$value.outputAmount;
-      var amountIn = toHex(trade.maximumAmountIn(options.slippageTolerance, inputAmount).quotient);
-      var amountOut = toHex(trade.minimumAmountOut(options.slippageTolerance, outputAmount).quotient);
+      var amountIn = toHex$1(trade.maximumAmountIn(options.slippageTolerance, inputAmount).quotient);
+      var amountOut = toHex$1(trade.minimumAmountOut(options.slippageTolerance, outputAmount).quotient);
       // flag for whether the trade is single hop or not
       var singleHop = route.pools.length === 1;
-      var recipient = routerMustCustody ? ADDRESS_THIS : typeof options.recipient === 'undefined' ? MSG_SENDER : validateAndParseAddress(options.recipient);
+      var recipient = routerMustCustody ? ADDRESS_THIS : typeof options.recipient === 'undefined' ? MSG_SENDER : validateAndParseAddress$1(options.recipient);
       if (singleHop) {
-        if (trade.tradeType === TradeType.EXACT_INPUT) {
+        if (trade.tradeType === TradeType$1.EXACT_INPUT) {
           var exactInputSingleParams = {
             tokenIn: route.tokenPath[0].address,
             tokenOut: route.tokenPath[1].address,
@@ -1794,8 +1796,8 @@ var SwapRouter = /*#__PURE__*/function () {
           calldatas.push(SwapRouter.INTERFACE.encodeFunctionData('exactOutputSingle', [exactOutputSingleParams]));
         }
       } else {
-        var path = encodeRouteToPath(route, trade.tradeType === TradeType.EXACT_OUTPUT);
-        if (trade.tradeType === TradeType.EXACT_INPUT) {
+        var path = encodeRouteToPath(route, trade.tradeType === TradeType$1.EXACT_OUTPUT);
+        if (trade.tradeType === TradeType$1.EXACT_INPUT) {
           var exactInputParams = {
             path: path,
             recipient: recipient,
@@ -1827,20 +1829,20 @@ var SwapRouter = /*#__PURE__*/function () {
    */;
   SwapRouter.encodeMixedRouteSwap = function encodeMixedRouteSwap(trade, options, routerMustCustody, performAggregatedSlippageCheck) {
     var calldatas = [];
-    !(trade.tradeType === TradeType.EXACT_INPUT) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TRADE_TYPE') : invariant(false) : void 0;
+    !(trade.tradeType === TradeType$1.EXACT_INPUT) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TRADE_TYPE') : invariant(false) : void 0;
     var _loop = function _loop() {
       var _step2$value = _step2.value,
         route = _step2$value.route,
         inputAmount = _step2$value.inputAmount,
         outputAmount = _step2$value.outputAmount;
-      var amountIn = toHex(trade.maximumAmountIn(options.slippageTolerance, inputAmount).quotient);
-      var amountOut = toHex(trade.minimumAmountOut(options.slippageTolerance, outputAmount).quotient);
+      var amountIn = toHex$1(trade.maximumAmountIn(options.slippageTolerance, inputAmount).quotient);
+      var amountOut = toHex$1(trade.minimumAmountOut(options.slippageTolerance, outputAmount).quotient);
       // flag for whether the trade is single hop or not
       var singleHop = route.pools.length === 1;
-      var recipient = routerMustCustody ? ADDRESS_THIS : typeof options.recipient === 'undefined' ? MSG_SENDER : validateAndParseAddress(options.recipient);
+      var recipient = routerMustCustody ? ADDRESS_THIS : typeof options.recipient === 'undefined' ? MSG_SENDER : validateAndParseAddress$1(options.recipient);
       var mixedRouteIsAllV3 = function mixedRouteIsAllV3(route) {
         return route.pools.every(function (pool) {
-          return pool instanceof Pool;
+          return pool instanceof Pool$1;
         });
       };
       if (singleHop) {
@@ -1920,9 +1922,9 @@ var SwapRouter = /*#__PURE__*/function () {
         if (route.protocol == Protocol.V2) {
           individualTrades.push(new Trade$2(
           // @ts-ignore
-          route, trades.tradeType == TradeType.EXACT_INPUT ? inputAmount : outputAmount, trades.tradeType));
+          route, trades.tradeType == TradeType$1.EXACT_INPUT ? inputAmount : outputAmount, trades.tradeType));
         } else if (route.protocol == Protocol.V3) {
-          individualTrades.push(Trade$1.createUncheckedTrade({
+          individualTrades.push(Trade$3.createUncheckedTrade({
             route: route,
             inputAmount: inputAmount,
             outputAmount: outputAmount,
@@ -1947,7 +1949,7 @@ var SwapRouter = /*#__PURE__*/function () {
       trades = [trades];
     }
     var numberOfTrades = trades.reduce(function (numberOfTrades, trade) {
-      return numberOfTrades + (trade instanceof Trade$1 || trade instanceof MixedRouteTrade ? trade.swaps.length : 1);
+      return numberOfTrades + (trade instanceof Trade$3 || trade instanceof MixedRouteTrade ? trade.swaps.length : 1);
     }, 0);
     var sampleTrade = trades[0];
     // All trades should have the same starting/ending currency and trade type
@@ -1967,7 +1969,7 @@ var SwapRouter = /*#__PURE__*/function () {
     //   1. when there are >2 exact input trades. this is only a heuristic,
     //      as it's still more gas-expensive even in this case, but has benefits
     //      in that the reversion probability is lower
-    var performAggregatedSlippageCheck = sampleTrade.tradeType === TradeType.EXACT_INPUT && numberOfTrades > 2;
+    var performAggregatedSlippageCheck = sampleTrade.tradeType === TradeType$1.EXACT_INPUT && numberOfTrades > 2;
     // flag for whether funds should be send first to the router
     //   1. when receiving ETH (which much be unwrapped from WETH)
     //   2. when a fee on the output is being taken
@@ -1983,7 +1985,7 @@ var SwapRouter = /*#__PURE__*/function () {
       var trade = _step4.value;
       if (trade instanceof Trade$2) {
         calldatas.push(SwapRouter.encodeV2Swap(trade, options, routerMustCustody, performAggregatedSlippageCheck));
-      } else if (trade instanceof Trade$1) {
+      } else if (trade instanceof Trade$3) {
         for (var _iterator5 = _createForOfIteratorHelperLoose(SwapRouter.encodeV3Swap(trade, options, routerMustCustody, performAggregatedSlippageCheck)), _step5; !(_step5 = _iterator5()).done;) {
           var calldata = _step5.value;
           calldatas.push(calldata);
@@ -1997,8 +1999,8 @@ var SwapRouter = /*#__PURE__*/function () {
         throw new Error('Unsupported trade object');
       }
     }
-    var ZERO_IN = CurrencyAmount.fromRawAmount(sampleTrade.inputAmount.currency, 0);
-    var ZERO_OUT = CurrencyAmount.fromRawAmount(sampleTrade.outputAmount.currency, 0);
+    var ZERO_IN = CurrencyAmount$1.fromRawAmount(sampleTrade.inputAmount.currency, 0);
+    var ZERO_OUT = CurrencyAmount$1.fromRawAmount(sampleTrade.outputAmount.currency, 0);
     var minimumAmountOut = trades.reduce(function (sum, trade) {
       return sum.add(trade.minimumAmountOut(options.slippageTolerance));
     }, ZERO_OUT);
@@ -2043,12 +2045,12 @@ var SwapRouter = /*#__PURE__*/function () {
     }
     // must refund when paying in ETH: either with an uncertain input amount OR if there's a chance of a partial fill.
     // unlike ERC20's, the full ETH value must be sent in the transaction, so the rest must be refunded.
-    if (inputIsNative && (sampleTrade.tradeType === TradeType.EXACT_OUTPUT || SwapRouter.riskOfPartialFill(trades))) {
-      calldatas.push(Payments.encodeRefundETH());
+    if (inputIsNative && (sampleTrade.tradeType === TradeType$1.EXACT_OUTPUT || SwapRouter.riskOfPartialFill(trades))) {
+      calldatas.push(Payments$1.encodeRefundETH());
     }
     return {
       calldata: MulticallExtended.encodeMulticall(calldatas, options.deadlineOrPreviousBlockhash),
-      value: toHex(inputIsNative ? totalAmountIn.quotient : ZERO$1)
+      value: toHex$1(inputIsNative ? totalAmountIn.quotient : ZERO$1)
     };
   }
   /**
@@ -2080,7 +2082,7 @@ var SwapRouter = /*#__PURE__*/function () {
     var tokenOut = outputIsNative ? WETH9[chainId] : positionAmountOut.currency.wrapped;
     // if swap output does not make up whole outputTokenBalanceDesired, pull in remaining tokens for adding liquidity
     var amountOutRemaining = positionAmountOut.subtract(quoteAmountOut.wrapped);
-    if (amountOutRemaining.greaterThan(CurrencyAmount.fromRawAmount(positionAmountOut.currency, 0))) {
+    if (amountOutRemaining.greaterThan(CurrencyAmount$1.fromRawAmount(positionAmountOut.currency, 0))) {
       // if output is native, this means the remaining portion is included as native value in the transaction
       // and must be wrapped. Otherwise, pull in remaining ERC20 token.
       outputIsNative ? calldatas.push(PaymentsExtended.encodeWrapETH(amountOutRemaining.quotient)) : calldatas.push(PaymentsExtended.encodePull(tokenOut, amountOutRemaining.quotient));
@@ -2136,8 +2138,8 @@ var SwapRouter = /*#__PURE__*/function () {
     var _position$mintAmounts = position.mintAmounts,
       amount0 = _position$mintAmounts.amount0,
       amount1 = _position$mintAmounts.amount1;
-    var currencyAmount0 = CurrencyAmount.fromRawAmount(position.pool.token0, amount0);
-    var currencyAmount1 = CurrencyAmount.fromRawAmount(position.pool.token1, amount1);
+    var currencyAmount0 = CurrencyAmount$1.fromRawAmount(position.pool.token0, amount0);
+    var currencyAmount1 = CurrencyAmount$1.fromRawAmount(position.pool.token1, amount1);
     var _ref = zeroForOne ? [currencyAmount0, currencyAmount1] : [currencyAmount1, currencyAmount0],
       positionAmountIn = _ref[0],
       positionAmountOut = _ref[1];
